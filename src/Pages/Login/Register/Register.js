@@ -1,10 +1,13 @@
-import { Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Button, Container, Grid, LinearProgress, TextField, Typography, Alert } from '@mui/material';
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import login from '../../../images/login.png'
+import useAuth from '../../../Hooks/useAuth'
+
 
 const Register = () => {
     const [loginData, setLoginData] = useState({})
+    const { registerUser, isLoading, user, authError } = useAuth()
     const handleOnChacge = e => {
         const filed = e.target.name;
         const value = e.target.value;
@@ -13,10 +16,11 @@ const Register = () => {
         setLoginData(newLoginData)
     }
     const handleLoginSubmit = e => {
+        e.preventDefault()
         if (loginData.password !== loginData.password2) {
             alert('password didnt match ')
         }
-        e.preventDefault()
+        registerUser(loginData.email, loginData.password)
 
     }
     return (
@@ -24,7 +28,7 @@ const Register = () => {
             <Grid container spacing={2}>
                 <Grid item sx={{ mt: 8 }} xs={12} md={6}>
                     <Typography variant="body1" gutterBottom>Register</Typography>
-                    <form onSubmit={handleLoginSubmit}>
+                    {!isLoading && <form onSubmit={handleLoginSubmit}>
                         <TextField
                             sx={{ width: '75%', m: 1 }}
                             id="standard-basic"
@@ -54,7 +58,7 @@ const Register = () => {
                             variant="standard"
                         />
                         <br />
-                        <Button sx={{ width: '75%', m: 1 }} type="submit" variant="contained">Login</Button>
+                        <Button sx={{ width: '75%', m: 1 }} type="submit" variant="contained">Register</Button>
                         <NavLink
                             style={{ textDecoration: "none" }}
                             to="/login">
@@ -62,12 +66,20 @@ const Register = () => {
 
                                 variant="text">All ready registered? Pleace Login</Button>
                         </NavLink>
-                    </form>
+                    </form>}
+                    {
+                        user.email && <Alert severity="success">added success </Alert>
+                    }
+                    {
+                        authError && <Alert severity="error">{authError}</Alert>
+                    }
+                    {isLoading && <LinearProgress />}
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <img style={{ width: '100%' }} src={login} alt="" />
                 </Grid>
             </Grid>
+            <NavLink to="/">home</NavLink>
         </Container>
     );
 };

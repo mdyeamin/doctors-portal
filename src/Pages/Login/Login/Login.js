@@ -1,10 +1,14 @@
-import { Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Button, Container, Grid, TextField, Typography, LinearProgress, Alert } from '@mui/material';
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import useAuth from '../../../Hooks/useAuth';
 import login from '../../../images/login.png'
 
 const Login = () => {
     const [loginData, setLoginData] = useState({})
+    const { isLoading, user, authError, loginUser, signinWithGoogle } = useAuth()
+    const history = useHistory();
+    const location = useLocation();
     const handleOnChacge = e => {
         const filed = e.target.name;
         const value = e.target.value;
@@ -14,7 +18,10 @@ const Login = () => {
     }
     const handleLoginSubmit = e => {
         e.preventDefault()
-
+        loginUser(loginData.email, loginData.password, location, history)
+    }
+    const handleGoogleSignin = () => {
+        signinWithGoogle(location, history)
     }
     return (
         <Container>
@@ -45,16 +52,23 @@ const Login = () => {
                         <NavLink
                             style={{ textDecoration: "none" }}
                             to="/register">
-                            <Button
-
-                                variant="text">New User? Pleace Register</Button>
+                            <Button variant="text">New User? Pleace Register</Button>
                         </NavLink>
                     </form>
+                    {
+                        user.email && <Alert severity="success">added success </Alert>
+                    }
+                    {
+                        authError && <Alert severity="error">{authError}</Alert>
+                    }
+                    {isLoading && <LinearProgress />}
+                    <Button onClick={handleGoogleSignin} variant="contained">Google</Button>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <img style={{ width: '100%' }} src={login} alt="" />
                 </Grid>
             </Grid>
+            <NavLink to="/">home</NavLink>
         </Container>
     );
 };
