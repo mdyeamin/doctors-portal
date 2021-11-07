@@ -13,9 +13,11 @@ const useFirebase = () => {
         setIsLoading(true)
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-
+                setAuthError('')
                 const newUser = { email, displayName: name }
                 setUser(newUser)
+                //save user to the dtabase
+                saveUser(email, name)
                 updateProfile(auth.currentUser, {
                     displayName: name,
                 }).then(() => {
@@ -24,7 +26,7 @@ const useFirebase = () => {
                 }).catch((error) => {
 
                 });
-                setAuthError('')
+
                 // Signed in 
                 history.replace('/')
 
@@ -61,6 +63,10 @@ const useFirebase = () => {
             // An error happened.
         })
             .finally(() => setIsLoading(false))
+
+    }
+
+    const saveUser = (email, displayName) => {
 
     }
 
