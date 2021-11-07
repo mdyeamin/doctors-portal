@@ -20,6 +20,7 @@ const Login = () => {
         e.preventDefault()
         loginUser(loginData.email, loginData.password, location, history)
     }
+    
     const handleGoogleSignin = () => {
         signinWithGoogle(location, history)
     }

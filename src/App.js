@@ -10,6 +10,7 @@ import Appointment from './Pages/Appointment/Appointment/Appointment';
 import Register from './Pages/Login/Register/Register';
 import AuthProvider from './Context/AuthProvider/AuthProvider';
 import PrivateRoute from './Pages/Login/PrivateRoute/PrivateRoute';
+import DashBoard from './Pages/DashBoard/DashBoard/DashBoard';
 function App() {
   return (
     <div className="App">
@@ -18,6 +19,9 @@ function App() {
           <Switch>
             <PrivateRoute path="/appointment">
               <Appointment />
+            </PrivateRoute>
+            <PrivateRoute path="/dashboard">
+              <DashBoard />
             </PrivateRoute>
             <Route path="/home">
               <Home />
