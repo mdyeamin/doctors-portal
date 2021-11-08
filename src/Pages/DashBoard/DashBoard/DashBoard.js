@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Calendar from '../../../Shared/Calendar/Calendar'
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,16 +15,24 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Button, Grid } from '@mui/material';
-import Appointments from '../Appointments/Appointments';
-import { Link } from 'react-router-dom';
-
+import { Button } from '@mui/material';
+import DashBoardHome from '../DashBoardHome/DashBoardHome';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams,
+    useRouteMatch
+} from "react-router-dom";
+import MakeAdmin from '../MakeAdmin/MakeAdmin';
+import AddDoctor from '../AddDoctor/AddDoctor';
 const drawerWidth = 200;
 
 function DashBoard(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    const [date, setDate] = React.useState(new Date())
+    let { path, url } = useRouteMatch();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -37,6 +44,9 @@ function DashBoard(props) {
             <Divider />
             <List>
                 <Link to="/appointment" style={{ textDecoration: "none" }}><Button color="inherit">Appointment</Button></Link>
+                <Link to={`${url}`} style={{ textDecoration: "none" }}><Button color="inherit">Dashboard</Button></Link>
+                <Link to={`${url}/makeAdmin`} style={{ textDecoration: "none" }}><Button color="inherit">Make Admin</Button></Link>
+                <Link to={`${url}/addDoctor`} style={{ textDecoration: "none" }}><Button color="inherit">Add Doctor</Button></Link>
 
                 {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                     <ListItem button key={text}>
@@ -47,7 +57,7 @@ function DashBoard(props) {
                     </ListItem>
                 ))}
             </List>
-        </div>
+        </div >
     );
 
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -114,19 +124,18 @@ function DashBoard(props) {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                        <Calendar
-                            date={date}
-                            setDate={setDate}
-                        ></Calendar>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Appointments
-                            date={date}
-                        ></Appointments>
-                    </Grid>
-                </Grid>
+                <Switch>
+
+                    <Route exact path={path}>
+                        <DashBoardHome></DashBoardHome>
+                    </Route>
+                    <Route path={`${path}/makeAdmin`}>
+                        <MakeAdmin></MakeAdmin>
+                    </Route>
+                    <Route path={`${path}/addDoctor`}>
+                        <AddDoctor></AddDoctor>
+                    </Route>
+                </Switch>
             </Box>
         </Box>
     );
